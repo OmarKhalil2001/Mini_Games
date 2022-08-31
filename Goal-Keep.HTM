@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<HEAD>
+<meta charset="utf-8">
+<title> Goal-Keep </title>
+
+
+</HEAD>
+<body>
+
+  <CENTER>
+<div style="background:#FFFFFF; width: 90% ; height : 20%;">
+<CENTER>
+<h1>
+  Goal-Keep
+</h1>
+<h3>
+  by :<i> Omar H.Khalil</i>
+</h3></CENTER>
+</div>
+<div style="width: 90% ; height : 20%;">
+  <h1>
+
+  </h1>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></script>
+<script type="application/processing">
+size(screen.height*0.8, screen.height*0.8,1);
+/*
+
+I, the developer of this game, challenge you to survive for 300 seconds (5 minutes) in this game.
+
+*/
+//GAME GOALKEEP
+// I challenge you to score 5 or more over 10; can you ?!! 
+//Please Suggest Improvements in the comments section
+size(600,600,1);
+
+//essential vars
+var padX;
+var ballx = 300;
+var bally = 210;
+var ballspeed = 12;
+var ballmove;
+var score = 0;
+var timer = 180;
+var ecog = 2;
+var eco = 0;
+var o = 0;
+var x= 300;
+var y= 300;
+var r2 = random(30,197);
+var g2 = random(30,194);
+var b2 = random(30,191);
+var degr = 1;
+var degg = 1;
+var degb = 1;
+var x3 = 300;
+var y3 = 250;
+var shots = 0;
+var statusOfBALL = "none"; 
+
+var reset  = function(){
+
+score = 0;
+shots = 0;
+ballx = 300;
+bally = 210;
+statusOfBALL = "none";
+
+};
+
+
+var ResetWithinGame = function(){
+    
+    timer--;
+    rect(300,100,300,100);
+    fill(0, 0, 0);
+    textSize(20);
+    textAlign(CENTER,CENTER);
+    text("Next Ball in: " + ceil(timer/60) + "\n Shots :"+ shots + "/10"+  "\n Status Of Ball : " + statusOfBALL,300,100 );
+    ballx = 300;
+    bally = 210;
+    ballmove = random(-5.2,5.2);
+    
+    if (timer <= 1){ ecog = 3; }
+}; 
+
+var move = function(){
+
+ballx+= ballmove;
+bally+= ballspeed;
+};
+
+var drawField = function(){
+    
+    stroke(255, 255, 255);
+    strokeWeight(10);
+    line(0,0,600,0);
+    fill(255, 255, 255);
+    ellipse(300,0,30,30);
+    fill(0,255,30,0);
+    ellipse(300,0,300,300);
+    rectMode(CENTER);
+    rect(300,600,400,350);
+    line(150,550,450,550);
+    strokeWeight(5);
+    stroke(255, 255, 255);
+    for(var l = 170; l < 450; l+= 20 ){ line(l,550,l, 600);}
+    for(var h = 570; h < 600; h+= 20 ){ line(150,h,450,h); }
+    strokeWeight(2);
+    line(150,520, 450, 520);
+    strokeWeight(10);
+    stroke(255, 255, 255);
+    line(150,550,150,600);
+    line(455,550,455,600);
+
+    
+                            };
+                            
+var game = function(){
+    
+      drawField();
+    
+    padX = mouseX;  
+    
+    //limits the movement of the goalkeeper
+    if(padX > 450){ padX = 450;}
+    if(padX < 150){ padX = 150;}
+     
+    //the goal keeper
+    rectMode(CENTER);
+    stroke(0, 0, 0);
+    strokeWeight(2);
+    fill(255, 255, 255);
+    rect(padX, 520, 30,10);
+    
+    //the ball
+    ellipse(ballx,bally,20,20);
+    
+    if (ballx > mouseX - 20 &&
+        ballx < mouseX + 20 && 
+        bally < 525 && bally > 505){ score++;
+        shots++; timer = 180; ecog = 2; statusOfBALL = "Saved";}
+    else if(bally > 520 ){ timer = 180; shots++; statusOfBALL = "Missed"; ecog = 2;}
+   
+    if(shots === 10 ){eco = 3;  }
+    if (ecog === 2){ResetWithinGame();}
+    if (ecog === 3){move();}
+    
+};
+
+var intro = function(){
+
+ o++;
+    
+    for (var a = 0 ; a < 10; a++){
+        
+        if ( a === 9 ) {
+            textAlign(CENTER,CENTER);
+            textSize(80);
+            fill(255, 255, 255,o);
+            text("Omar Khalil \nProduction",x,y);
+            textSize(25);
+            text("Presents",300,425);
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(80);
+            fill(r2, g2, b2,o);
+            text("Omar Khalil \nProduction",x-a,y+a);
+            textSize(25);
+            text("Presents",300-a/2,425+a/2);
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 200 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 200 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 200 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+            
+            
+        }
+        
+    }
+    
+    if(o > 350){ eco = 1;}
+
+};
+
+var start = function(){
+
+for (var a = 0 ; a < 7; a++){
+        
+        if ( a === 6 ) {
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(255, 255, 255);
+            text("GoalKeep",x3,y3);
+            textSize(40);
+            text('"Show Your Skills"',300,353);  
+            textSize(35);
+            text("(Click to continue)",300,550);   
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(r2, g2, b2);
+            text("GoalKeep",x3-a,y3+a);
+            textSize(40);
+            text('"Show Your Skills"',300-a/2,353+a/2);  
+            textSize(35);
+            text("(Click to continue)",300-a/2,550+a/2);   
+            
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 175 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 175 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 175 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+       
+         textSize(40);
+                
+         text('"Show Your Skills"',300,353);  
+         textSize(35);
+               
+         text("(Click to continue)",300,550);   
+        }
+ 
+}
+mouseClicked = function() {
+
+eco++;
+};};
+
+
+var over = function(){
+    
+    
+    var x4 = 300;
+    var y4 = 200;
+    
+       for (var a = 0 ; a < 7; a++){
+        
+        if ( a === 6 ) {
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(255, 255, 255);
+            text("Game Over",x4,y4);
+                textSize(55);
+                textAlign(CENTER,CENTER);
+                text("Your Score : " + score +"/10" ,300,300);
+               
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(r2, g2, b2);
+            text("Game Over",x4+a,y4+a);
+            
+                textSize(55);
+    textAlign(CENTER,CENTER);
+     text("Your Score : " +  score +"/10" ,300+a,300+a);
+           
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 175 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 175 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 175 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+            
+            
+        }}
+    
+    
+    fill(255, 255, 255);
+    rectMode(CENTER);
+    rect(300,500,100,50,5);
+    fill(0, 0, 0);
+    textSize(18);
+    textAlign(CENTER,CENTER);
+    text("New Game",300,500);
+   
+    mouseClicked = function(){
+    if (mouseX > 250 && mouseX < 350 && mouseY > 475 && mouseY < 525){
+        reset();
+        eco = 2;}};
+};
+
+draw = function() {
+ 
+ background(0, 79, 8); 
+    
+ if (eco  === 0){intro();}
+ else if(eco === 1 ){start();}
+ else if(eco === 2){game();}
+ else if(eco === 3){over();}
+};
+
+
+</script>
+
+<canvas></canvas></CENTER>
+</body>
+</HTML>

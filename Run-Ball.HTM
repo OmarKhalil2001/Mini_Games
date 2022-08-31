@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<HEAD>
+<meta charset="utf-8">
+<title> Run-Ball </title>
+
+
+</HEAD>
+<body>
+
+  <CENTER>
+<div style="background:#FFFFFF; width: 90% ; height : 20%;">
+<CENTER>
+<h1>
+  RUN-BALL
+</h1>
+<h3>
+  by :<i> Omar H.Khalil</i>
+</h3></CENTER>
+</div>
+<div style="width: 90% ; height : 20%;">
+  <h1>
+
+  </h1>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></script>
+<script type="application/processing">
+
+/*
+
+I, the developer of this game, challenge you to survive for 300 seconds (5 minutes) in this game.
+
+*/
+size(600,600,1);
+frameRate(60);
+
+var player_x = 200;
+var player_y = 300;
+var eco = 0;
+var maxspeedd = 2;
+var starts = 0;
+var seconds = 0;
+var r2 = random(30,197);
+var g2 = random(30,194);
+var b2 = random(30,191);
+var degr = 1;
+var degg = 1;
+var degb = 1;
+var score = 0;
+var x3 = 300;
+var y3 = 250;
+var balls;
+
+var com_balls = function (){
+  
+  this.timing = 6000;
+  this.x = 20;
+  this.y = 20;
+  this.size = 30;
+  this.maxspeed = maxspeedd;
+  this.x_move = random(1,this.maxspeed);
+  this.y_move = random(1,this.maxspeed);
+  this.counter = 0;
+  this.bg = color(0,random(100,255),random(200,255));
+};
+
+com_balls.prototype.draw = function() {
+    noStroke();
+    fill(this.bg);
+    ellipse(this.x,this.y,this.size,this.size);
+
+
+};
+
+com_balls.prototype.move = function() {
+
+  this.x += this.x_move;
+  this.y += this.y_move;
+  this.counter++;
+
+  if(this.counter%this.timing === 0){
+    
+    this.timing = 9000;  
+    maxspeedd++;
+    balls.push(new com_balls());    
+    
+    if (this.maxspeed >= 4){
+        
+        this.maxspeed = 4;
+        
+    }
+    
+  }
+  if (this.x > width) {this.x_move = random(-this.maxspeed,-1-(this.maxspeed+2)); }
+  if (this.x < 0) {this.x_move = random(1+(this.maxspeed-2),this.maxspeed); }
+  if (this.y < 0) {this.y_move = random(1+(this.maxspeed-2),this.maxspeed); }
+  if (this.y > height) { this.y_move = random(-this.maxspeed,-1)-(this.maxspeed+2); }
+ 
+};
+
+com_balls.prototype.lose = function(){
+    
+  if ((mouseX-this.x)*(mouseX-this.x)+(mouseY-this.y)*(mouseY-this.y) <= 225 ){eco = 2;}  
+    
+};
+
+balls = [new com_balls(),new com_balls(),new com_balls(),new com_balls()];
+   
+var reset = function(){
+seconds =0 ;
+starts = 0;
+score = 0;
+player_x = 200;
+player_y = 300;
+maxspeedd = 2;
+balls = [new com_balls(),new com_balls(),new com_balls(),new com_balls()];
+
+for(var t = 0 ; t < balls.length; t++){
+    
+    balls[t].x = 20;
+    balls[t].y = 20;
+    balls[t].timing = 3000;
+    balls[t].counter = 0;
+
+}
+
+};    
+
+var play = function(){
+   
+   starts++;
+   
+   if(starts%60 === 0 ){
+       
+       seconds+= 1;
+   }
+ 
+ 
+   background(255, 255, 255);
+   if (seconds >= 300){eco = 3;}
+   player_x = mouseX;
+   player_y = mouseY;
+ 
+    for (var i = 0; i < balls.length; i++){
+      
+        balls[i].draw();
+        balls[i].move();
+        balls[i].lose();        
+            
+    }
+    
+    fill(0);
+    ellipse(player_x,player_y,20,20);
+    score  += 0.2;
+
+            textAlign(CENTER,CENTER);
+            textSize(50);
+            fill(0, 99, 212);
+            text("seconds: " + seconds,300,100);
+ 
+    
+    cursor("NONE");
+
+
+
+};
+
+var won = function(){
+
+    background(255, 255, 255);
+    cursor();
+    var x4 = 300;
+    var y4 = 200;
+    
+       for (var a = 0 ; a < 7; a++){
+        
+        if ( a === 6 ) {
+            textAlign(CENTER,CENTER);
+            textSize(130);
+            fill(255, 0, 0);
+            text("You Won",x4,y4);
+                textSize(55);
+                textAlign(CENTER,CENTER);
+                text("Bravo!" ,300,300);
+               
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(130);
+            fill(r2, g2, b2);
+            text("You Won",x4+a,y4+a);
+            
+                textSize(55);
+    textAlign(CENTER,CENTER);
+     text("Bravo!" ,300+a,300+a);
+           
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 175 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 175 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 175 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+            
+            
+        }}
+            fill(196, 0, 0);
+    rectMode(CENTER);
+    rect(300,500,120,50,5);
+    fill(255, 255, 255);
+    textSize(20);
+    textAlign(CENTER,CENTER);
+    text("Do it again",300,500);
+   
+    mouseClicked = function(){
+    if (mouseX > 250 && mouseX < 350 && mouseY > 475 && mouseY < 525){
+        reset();
+        eco = 1;}};
+        
+};
+        
+var lose = function(){
+
+    background(255, 255, 255);
+    cursor();
+    var x4 = 300;
+    var y4 = 200;
+    
+       for (var a = 0 ; a < 7; a++){
+        
+        if ( a === 6 ) {
+            textAlign(CENTER,CENTER);
+            textSize(130);
+            fill(255, 0, 0);
+            text("You Lost",x4,y4);
+                textSize(55);
+                textAlign(CENTER,CENTER);
+                text("Your Score : " + round(score) ,300,300);
+                text("seconds : " + seconds ,300,360);
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(130);
+            fill(r2, g2, b2);
+            text("You Lost",x4+a,y4+a);
+            
+                textSize(55);
+    textAlign(CENTER,CENTER);
+     text("Your Score : " + round(score) ,300+a,300+a);
+      text("seconds : " + seconds ,300+a,360+a);      
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 175 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 175 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 175 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+            
+            
+        }}
+    
+    
+    fill(196, 0, 0);
+    rectMode(CENTER);
+    rect(300,500,100,50,5);
+    fill(255, 255, 255);
+    textSize(20);
+    textAlign(CENTER,CENTER);
+    text("Try again",300,500);
+   
+    mouseClicked = function(){
+    if (mouseX > 250 && mouseX < 350 && mouseY > 475 && mouseY < 525){
+        reset();
+        eco = 1;}};
+        
+};
+
+var start = function(){
+    
+    
+    background(255, 255, 255);
+    for (var a = 0 ; a < 7; a++){
+        
+        if ( a === 6 ) {
+            textAlign(CENTER,CENTER);
+            textSize(180);
+            fill(255, 0, 0);
+            text("RUN\nBALL",x3,y3);
+        }else {
+            textAlign(CENTER,CENTER);
+            textSize(180);
+            fill(r2, g2, b2);
+            text("RUN\nBALL",x3+a,y3+a);
+            
+    r2+= degr;
+    g2+= degg;
+    b2+= degb;
+            
+    if ( r2 >= 175 ){degr = -0.3;}
+    else if( r2 <= 44 ){ degr = 0.3; }
+    if ( g2 >= 175 ){degg = -0.3;}
+    else if( g2 <= 43 ){ degg = 0.3; }
+    if ( b2 >= 175 ){degb = -0.3;}
+    else if( b2 <= 43 ){ degb = 0.3; }
+       
+         textSize(40);
+         fill (r2, g2, b2);        
+         text('"A Challenge for You"',300,470);  
+         textSize(35);
+         fill (r2, g2, b2);        
+         text("(Click to continue)",300,550);   
+        }
+ 
+}
+mouseClicked = function() {
+
+eco++;
+};
+};
+
+
+draw = function() {
+  cursor("CROSS");
+  if(eco === 0){start();}
+  if(eco === 1){play();}
+  if(eco === 2){lose();}
+  if(eco === 3){won();}
+};
+
+
+
+</script>
+
+<canvas></canvas></CENTER>
+</body>
+</HTML>
